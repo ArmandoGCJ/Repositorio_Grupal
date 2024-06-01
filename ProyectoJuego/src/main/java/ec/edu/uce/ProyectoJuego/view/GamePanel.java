@@ -1,20 +1,17 @@
-package ec.edu.uce.ProyectoExamen.view;
+package ec.edu.uce.ProyectoJuego.view;
 
-import ec.edu.uce.ProyectoExamen.controller.Container;
-
+import ec.edu.uce.ProyectoJuego.controller.Container;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
 
 public class GamePanel extends JPanel implements KeyListener {
 
-	Container container;
+	private Container container;
 
 	public GamePanel() {
 

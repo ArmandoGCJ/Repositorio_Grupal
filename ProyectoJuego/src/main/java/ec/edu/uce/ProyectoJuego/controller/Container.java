@@ -1,11 +1,12 @@
-package ec.edu.uce.ProyectoExamen.controller;
+package ec.edu.uce.ProyectoJuego.controller;
 
-import ec.edu.uce.ProyectoExamen.model.Bullet;
-import ec.edu.uce.ProyectoExamen.model.Enemy;
-import ec.edu.uce.ProyectoExamen.model.Hero;
+import ec.edu.uce.ProyectoJuego.model.Bullet;
+import ec.edu.uce.ProyectoJuego.model.Enemy;
+import ec.edu.uce.ProyectoJuego.model.Hero;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Container {
 

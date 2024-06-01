@@ -1,4 +1,4 @@
-package ec.edu.uce.ProyectoExamen.model;
+package ec.edu.uce.ProyectoJuego.model;
 
 import java.awt.*;
 import java.util.Random;

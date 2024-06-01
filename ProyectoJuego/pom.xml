@@ -11,15 +11,19 @@
 	<groupId>ec.edu.uce</groupId>
 	<artifactId>ProyectoJuego</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ProyectoExamen</name>
-	<description>Demo project for Spring Boot</description>
+	<name>ProyectoJuego</name>
+	<description>project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<dependency>

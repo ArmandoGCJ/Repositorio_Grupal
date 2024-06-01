@@ -1,6 +1,6 @@
-package ec.edu.uce.ProyectoExamen.view;
+package ec.edu.uce.ProyectoJuego.view;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class FrameGame extends JFrame{
 
