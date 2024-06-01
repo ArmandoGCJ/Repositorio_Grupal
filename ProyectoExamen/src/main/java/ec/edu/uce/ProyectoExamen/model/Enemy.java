@@ -1,42 +1,42 @@
 package ec.edu.uce.ProyectoExamen.model;
 
 import java.awt.*;
+import java.util.Random;
 
-public class Enemy extends Role implements Drawable,Movable {
+public class Enemy extends Role implements Drawable, Movable {
     private int life;
+    private int x = 100, y = 100;
 
-    int [] cord_x = {100, 200, 200, 150, 100};
-    int [] cord_y = {100, 100, 300, 250, 300};
+    final int SCREEN_WIDTH = 600;
+    final int SCREEN_HEIGHT = 100;
+
+    Random r = new Random();
+/*= {r.nextInt(SCREEN_WIDTH)*x, x + 50, x + 50, x + 25, x}*/
+/*= {r.nextInt(SCREEN_HEIGHT)*y, y, y + 30, y + 10, y + 30}*/
+    int[] cord_x ;
+    int[] cord_y ;
 
     private boolean movingRight = true;
 
-    public Enemy(int randomX, int randomY) {
-
-        cord_x[0] = randomX;
-        cord_x[1] = randomX + 100;
-        cord_x[2] = randomX + 100;
-        cord_x[3] = randomX + 50;
-        cord_x[4] = randomX;
-
-        cord_y[0] = randomY;
-        cord_y[1] = randomY;
-        cord_y[2] = randomY + 50;
-        cord_y[3] = randomY + 25;
-        cord_y[4] = randomY + 50;
-    }
-
     public Enemy() {
-        super(5);
+// Generar posiciones aleatorias dentro del rango especificado
+        this.x = r.nextInt(501) + 100; // Entre 100 y 600
+        this.y = r.nextInt(101); // Entre 0 y 100
+        // También puedes ajustar la generación de las coordenadas del polígono
+        this.cord_x = new int[]{this.x, this.x + 50, this.x + 50, this.x + 25, this.x};
+        this.cord_y = new int[]{this.y, this.y, this.y + 30, this.y + 10, this.y + 30};
     }
 
     public Enemy(int life) {
+        super(5);
         this.life = life;
 
     }
+
     @Override
     public void draw(Graphics graphics) {
         graphics.setColor(Color.GREEN);
-        graphics.fillPolygon(cord_x,cord_y,5);
+        graphics.fillPolygon(cord_x, cord_y, 5);
     }
 
     @Override

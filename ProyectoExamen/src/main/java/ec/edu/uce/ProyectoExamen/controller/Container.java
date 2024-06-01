@@ -1,34 +1,40 @@
 package ec.edu.uce.ProyectoExamen.controller;
 
+import ec.edu.uce.ProyectoExamen.model.Bullet;
 import ec.edu.uce.ProyectoExamen.model.Enemy;
 import ec.edu.uce.ProyectoExamen.model.Hero;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Container {
 
     Hero hero = new Hero();
 
-    Enemy enemy = new Enemy();
-
-    final int SCREEN_WIDTH = 600;
-    final int SCREEN_HEIGHT = 100;
-
     List<Enemy> enemies = new ArrayList<>();
-    Random r = new Random();
+    List<Bullet> bullets = new ArrayList<>();
 
     public Container() {
-        for (int i = 0; i<10;i++) {
-            enemies.add(new Enemy(r.nextInt(SCREEN_WIDTH),r.nextInt(SCREEN_HEIGHT))); // Suponiendo que 3 sea la vida inicial de cada enemigo
+
+        for (int i = 0; i<5;i++) {
+            enemies.add(new Enemy()); // Suponiendo que 3 sea la vida inicial de cada enemigo
         }
+    }
+
+    public void setBullet(){
+
+        bullets.add(new Bullet(hero.getX(),hero.getY()));
+
     }
 
     public void draw(Graphics graphics) {
         hero.draw(graphics);
+
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).draw(graphics);
+        }
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).draw(graphics);
         }
     }
 
@@ -44,11 +50,15 @@ public class Container {
 
     public void moveDown(int var) {
         for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).moveDown(var);
-            enemies.get(i).move((int) (var+0.5f));
-
+            enemies.get(i).move(var++);
+            enemies.get(i).moveDown((int) (var*0.25f));
         }
+    }
 
+    public void moveUp(int variable) {
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).moveUp(variable);
+        }
     }
 
     public int score(){
@@ -56,14 +66,8 @@ public class Container {
     }
 
     public int life(){
-
         return hero.getLife();
     }
 
-    public void moveUp(int variable) {
-        /*for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).moveUp(variable);
-        }*/
 
-    }
 }

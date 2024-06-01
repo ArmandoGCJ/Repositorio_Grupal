@@ -24,10 +24,10 @@ public class GamePanel extends JPanel implements KeyListener {
 		addKeyListener(this);
 
 		Timer timer = new Timer(100, new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				container.moveDown(1);
+				container.moveUp(10);
 				repaint();
 			}
 		});
@@ -53,9 +53,9 @@ public class GamePanel extends JPanel implements KeyListener {
 
 		// Dibujar la barra de vida
 		g.setColor(Color.WHITE);
-		g.drawRect(10,10,100,20);
+		g.drawRect(10,20,100,20);
 		g.setColor(Color.RED);
-		g.fillRect(10, 10, 100, 20); // Dibuja la barra de vida en la esquina superior izquierda
+		g.fillRect(10, 20, 100, 20); // Dibuja la barra de vida en la esquina superior izquierda
 	
 
 	}
@@ -79,8 +79,7 @@ public class GamePanel extends JPanel implements KeyListener {
 		}
 		
 		case KeyEvent.VK_SPACE: {
-			container.moveUp(5);
-			//container.drawShoot(getGraphics());
+			container.setBullet();
 			break;
 		}
 		default:
