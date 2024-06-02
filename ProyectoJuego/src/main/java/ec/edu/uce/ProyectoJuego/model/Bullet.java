@@ -13,7 +13,6 @@ public class Bullet implements Drawable,Movable{
 
     @Override
     public void draw(Graphics graphics) {
-
         graphics.setColor(Color.WHITE);
         graphics.fillOval(x - 4, y, 7, 13);
         graphics.drawOval(x - 4, y, 7, 13);
@@ -29,7 +28,10 @@ public class Bullet implements Drawable,Movable{
 
     @Override
     public void moveDown(int variable) {
-
+        y += variable;
+        if (y > 570) {
+            y = 570;
+        }
     }
 
     @Override
@@ -42,4 +44,24 @@ public class Bullet implements Drawable,Movable{
 
     }
 
+    public boolean collidesWithBullet(Rectangle other) {
+        Rectangle bulletBounds = new Rectangle(x - 4, y, 7, 13);
+        return bulletBounds.intersects(other);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }

@@ -3,15 +3,15 @@ package ec.edu.uce.ProyectoJuego.model;
 import java.awt.*;
 
 
-public class Hero extends Role implements Drawable,Movable {
+public class Hero implements Drawable, Movable {
 
     private String name;
-    private int life;
-    private int score;
+    private int life = 100;
+    private int score = 0;
     private int x = 400, y = 500;
 
     public Hero() {
-        super(3);
+
     }
 
     public Hero(String name, int life, int score) {
@@ -19,10 +19,12 @@ public class Hero extends Role implements Drawable,Movable {
         this.life = life;
         this.score = score;
     }
+
     @Override
     public void draw(Graphics graphics) {
-        int[] cord_x = { x, x + 40, x - 40 };
-        int[] cord_y = { y, y + 40, y + 40 };
+        int[] cord_x = {x, x + 40, x - 40};
+        int[] cord_y = {y, y + 40, y + 40};
+
         graphics.setColor(Color.WHITE);
         graphics.fillPolygon(cord_x, cord_y, 3);
     }
@@ -41,8 +43,8 @@ public class Hero extends Role implements Drawable,Movable {
     public void moveLeft(int variable) {
         // Restar
         x -= variable;
-        if (x < 11) {
-            x = 11;
+        if (x < 5) {
+            x = 5;
         }
     }
 
@@ -50,9 +52,14 @@ public class Hero extends Role implements Drawable,Movable {
     public void moveRight(int variable) {
         // Sumar
         x += variable;
-        if (x > 772) {
-            x = 772;
+        if (x > 780) {
+            x = 780;
         }
+    }
+
+    public boolean collidesWith(Rectangle other) {
+        Rectangle heroBounds = new Rectangle(x - 20, y, 40, 50);
+        return heroBounds.intersects(other);
     }
 
     public String getName() {

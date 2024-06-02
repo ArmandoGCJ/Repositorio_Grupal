@@ -1,42 +1,44 @@
 package ec.edu.uce.ProyectoJuego.model;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class Enemy extends Role implements Drawable, Movable {
-    private int life;
-    private int x = 100, y = 100;
+public class Enemy implements Drawable, Movable {
+    private int life = 100;
 
     final int SCREEN_WIDTH = 600;
     final int SCREEN_HEIGHT = 100;
 
-    Random r = new Random();
-/*= {r.nextInt(SCREEN_WIDTH)*x, x + 50, x + 50, x + 25, x}*/
-/*= {r.nextInt(SCREEN_HEIGHT)*y, y, y + 30, y + 10, y + 30}*/
-    int[] cord_x ;
-    int[] cord_y ;
+    private List<Point> positions;
+    private List<Integer> directions;
 
-    private boolean movingRight = true;
 
     public Enemy() {
-// Generar posiciones aleatorias dentro del rango especificado
-        this.x = r.nextInt(501) + 100; // Entre 100 y 600
-        this.y = r.nextInt(101); // Entre 0 y 100
-        // También puedes ajustar la generación de las coordenadas del polígono
-        this.cord_x = new int[]{this.x, this.x + 50, this.x + 50, this.x + 25, this.x};
-        this.cord_y = new int[]{this.y, this.y, this.y + 30, this.y + 10, this.y + 30};
-    }
+        positions = new ArrayList<>();
+        directions = new ArrayList<>();
 
-    public Enemy(int life) {
-        super(5);
-        this.life = life;
+        // Creacion de enemigos en posiciones aleatorias.
+        Random random = new Random();
+        int x = random.nextInt(SCREEN_WIDTH);
+        int y = random.nextInt(SCREEN_HEIGHT);
+        positions.add(new Point(x, y));
+
+        int direction = random.nextBoolean() ? -1 : 1;
+        directions.add(direction);
+
 
     }
 
     @Override
-    public void draw(Graphics graphics) {
-        graphics.setColor(Color.GREEN);
-        graphics.fillPolygon(cord_x, cord_y, 5);
+    public void draw(Graphics g) {
+        g.setColor(Color.GREEN);
+        for (Point position : positions) {
+            int[] xPoints = {position.x, position.x + 50, position.x + 50, position.x + 25, position.x};
+            int[] yPoints = {position.y, position.y, position.y + 30, position.y + 10, position.y + 30};
+            g.fillPolygon(xPoints, yPoints, 5);
+        }
     }
 
     @Override
@@ -46,46 +48,53 @@ public class Enemy extends Role implements Drawable, Movable {
 
     @Override
     public void moveDown(int variable) {
-        for (int i = 0; i < cord_y.length; i++) {
-            cord_y[i] = cord_y[i] + variable;
+        for (int i = 0; i < positions.size(); i++) {
+            Point position = positions.get(i);
+            position.setLocation(position.getX(), position.getY() + (variable *0.45f));
         }
     }
 
     @Override
     public void moveLeft(int variable) {
-        for (int i = 0; i < cord_x.length; i++) {
-            if (cord_x[i] - variable < 0) { // Si se sale del borde izquierdo
-                // Cambiar la dirección del movimiento
-                movingRight = true;
-                // Mantenerlo en el borde izquierdo
-                cord_x[i] = 0;
-            } else {
-                cord_x[i] = cord_x[i] - variable;
-            }
+        for (int i = 0; i < positions.size(); i++) {
+            Point position = positions.get(i);
+            position.setLocation(position.getX() - variable, position.getY());
         }
     }
 
     @Override
     public void moveRight(int variable) {
-        for (int i = 0; i < cord_x.length; i++) {
-            if (cord_x[i] + variable > 800 - 20) { // Si se sale del borde derecho, donde 50 es el ancho del enemigo
-                // Cambiar la dirección del movimiento
-                movingRight = false;
-                // Mantenerlo en el borde derecho
-                cord_x[i] = 800 - 20;
-            } else {
-                cord_x[i] = cord_x[i] + variable;
-            }
+        for (int i = 0; i < positions.size(); i++) {
+            Point position = positions.get(i);
+            position.setLocation(position.getX() + variable, position.getY());
         }
     }
 
-    public void move(int variable) {
-        if (movingRight) {
-            moveRight(variable);
-        } else {
-            moveLeft(variable);
+    public void move() {
+        for (int i = 0; i < positions.size(); i++) {
+            Point position = positions.get(i);
+            int currentDirection = directions.get(i);
+
+            // Cambiar de dirección al alcanzar los bordes
+            if (position.getX() <= 0 || position.getX() >= 735) {
+                currentDirection *= -1;
+                directions.set(i, currentDirection);
+            }
+            // Mover en la dirección actual
+            position.setLocation(position.getX() + currentDirection, position.getY());
         }
     }
+
+    public boolean checkCollisionWith(Rectangle other) {
+        for (Point position : positions) {
+            Rectangle enemyBounds = new Rectangle((int) position.getX(), (int) position.getY(), 50, 30);
+            if (enemyBounds.intersects(other)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public int getLife() {
         return life;
@@ -94,4 +103,9 @@ public class Enemy extends Role implements Drawable, Movable {
     public void setLife(int life) {
         this.life = life;
     }
+
+    public List<Point> getPositions() {
+        return positions;
+    }
+
 }
