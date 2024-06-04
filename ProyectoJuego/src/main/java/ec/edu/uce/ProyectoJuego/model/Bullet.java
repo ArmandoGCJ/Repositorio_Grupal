@@ -44,9 +44,9 @@ public class Bullet implements Drawable,Movable{
 
     }
 
-    public boolean collidesWithBullet(Rectangle other) {
+    public Rectangle collidesWithBullet() {
         Rectangle bulletBounds = new Rectangle(x - 4, y, 7, 13);
-        return bulletBounds.intersects(other);
+        return bulletBounds;
     }
 
     public int getX() {

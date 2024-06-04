@@ -68,8 +68,6 @@ public class GamePanel extends JPanel implements KeyListener {
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             g.drawString("GAME OVER", (getWidth() / 3), getHeight() / 2);
             gameActive = false;
-            // Lógica para reiniciar el juego si el héroe ha muerto
-            //container = new Container();
 
         }
 
@@ -78,6 +76,8 @@ public class GamePanel extends JPanel implements KeyListener {
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             g.drawString("PAUSED", (getWidth() / 3), getHeight() / 2);
         }
+
+
     }
 
     @Override
@@ -123,7 +123,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     private void updateCharacterMovement() {
-        int moveAmount = 15;
+        int moveAmount = 20;
         if (!isPaused) {
             if (isMovingLeft) {
                 container.moveLeft(moveAmount);

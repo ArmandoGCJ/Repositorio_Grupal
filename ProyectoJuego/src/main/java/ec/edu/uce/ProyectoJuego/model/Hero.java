@@ -57,7 +57,7 @@ public class Hero implements Drawable, Movable {
         }
     }
 
-    public boolean collidesWith(Rectangle other) {
+    public boolean collision(Rectangle other) {
         Rectangle heroBounds = new Rectangle(x - 20, y, 40, 50);
         return heroBounds.intersects(other);
     }

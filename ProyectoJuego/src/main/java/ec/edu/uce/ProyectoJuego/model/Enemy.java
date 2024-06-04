@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Enemy implements Drawable, Movable {
     private int life = 100;
 
@@ -13,9 +18,19 @@ public class Enemy implements Drawable, Movable {
 
     private List<Point> positions;
     private List<Integer> directions;
+    private int width;
+    private int height;
 
-
+    // Constructor por defecto
     public Enemy() {
+        this(50, 30); // Llamada al nuevo constructor con tamaño por defecto
+
+    }
+
+    // Nuevo constructor con tamaño personalizado
+    public Enemy(int width, int height) {
+        this.width = width;
+        this.height = height;
         positions = new ArrayList<>();
         directions = new ArrayList<>();
 
@@ -27,19 +42,18 @@ public class Enemy implements Drawable, Movable {
 
         int direction = random.nextBoolean() ? -1 : 1;
         directions.add(direction);
-
-
     }
 
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.GREEN);
         for (Point position : positions) {
-            int[] xPoints = {position.x, position.x + 50, position.x + 50, position.x + 25, position.x};
-            int[] yPoints = {position.y, position.y, position.y + 30, position.y + 10, position.y + 30};
+            int[] xPoints = {position.x, position.x + width, position.x + width, position.x + width / 2, position.x};
+            int[] yPoints = {position.y, position.y, position.y + height, position.y + height / 3, position.y + height};
             g.fillPolygon(xPoints, yPoints, 5);
         }
     }
+
 
     @Override
     public void moveUp(int variable) {
@@ -50,7 +64,7 @@ public class Enemy implements Drawable, Movable {
     public void moveDown(int variable) {
         for (int i = 0; i < positions.size(); i++) {
             Point position = positions.get(i);
-            position.setLocation(position.getX(), position.getY() + (variable *0.45f));
+            position.setLocation(position.getX(), position.getY() + (variable * 0.5f));
         }
     }
 
