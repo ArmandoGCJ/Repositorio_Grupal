@@ -10,5 +10,4 @@ public class ProyectoJuegoApplication {
 		frameGame.setVisible(true);
 
 	}
-
 }

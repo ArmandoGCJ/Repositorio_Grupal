@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GamePanel extends JPanel implements KeyListener {
     private Container container;
@@ -15,6 +17,8 @@ public class GamePanel extends JPanel implements KeyListener {
     private Timer enemyBulletTimer;
     private boolean isPaused = false;
     private boolean gameActive = true;
+    private Set<Integer> keysPressed = new HashSet<>();
+    private Timer timer;
 
     public GamePanel() {
         setBackground(Color.BLACK);
@@ -22,6 +26,7 @@ public class GamePanel extends JPanel implements KeyListener {
         container = new Container();
         addKeyListener(this);
 
+        //Tiempo de refresco del juego
         gameTimer = new Timer(1000 / 60, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -33,6 +38,7 @@ public class GamePanel extends JPanel implements KeyListener {
         });
         gameTimer.start();
 
+        //Tiempo para que los enemigos disparen
         enemyBulletTimer = new Timer(2500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -43,6 +49,25 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         });
         enemyBulletTimer.start();
+        timer = new Timer(20, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGame();
+            }
+        });
+        timer.start();
+    }
+    private void updateGame() {
+        if (!gameActive)
+            return;
+
+        if (keysPressed.contains(KeyEvent.VK_A)&& !isPaused) {
+            container.moveLeft(10);
+        }
+        if (keysPressed.contains(KeyEvent.VK_D)&& !isPaused) {
+            container.moveRight(10);
+        }
+        repaint();
     }
 
     @Override
@@ -81,58 +106,27 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
-
-    private boolean isMovingLeft = false;
-    private boolean isMovingRight = false;
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (!gameActive)
             return;
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                isMovingLeft = true;
-                break;
-            case KeyEvent.VK_D:
-                isMovingRight = true;
-                break;
-            case KeyEvent.VK_SPACE:
-                if (!isPaused) {
-                    container.setBulletHero();
-                }
-                break;
-            case KeyEvent.VK_ESCAPE:
-                togglePause();
-                break;
+        keysPressed.add(e.getKeyCode());
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && !isPaused) {
+            container.setBulletHero();
         }
-        updateCharacterMovement();
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            togglePause();
+        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                isMovingLeft = false;
-                break;
-            case KeyEvent.VK_D:
-                isMovingRight = false;
-                break;
-        }
-        updateCharacterMovement();
-    }
-
-    private void updateCharacterMovement() {
-        int moveAmount = 20;
-        if (!isPaused) {
-            if (isMovingLeft) {
-                container.moveLeft(moveAmount);
-            }
-            if (isMovingRight) {
-                container.moveRight(moveAmount);
-            }
-            repaint();
-        }
+        keysPressed.remove(e.getKeyCode());
     }
 
     private void togglePause() {

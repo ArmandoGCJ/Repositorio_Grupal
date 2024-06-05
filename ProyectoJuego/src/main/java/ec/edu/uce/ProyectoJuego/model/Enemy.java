@@ -64,7 +64,7 @@ public class Enemy implements Drawable, Movable {
     public void moveDown(int variable) {
         for (int i = 0; i < positions.size(); i++) {
             Point position = positions.get(i);
-            position.setLocation(position.getX(), position.getY() + (variable * 0.5f));
+            position.setLocation(position.getX(), position.getY() + (variable * 0.4f));
         }
     }
 

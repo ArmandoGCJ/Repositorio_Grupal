@@ -51,6 +51,8 @@ public class Container {
 
         Level currentLevel = levels.get(levelIndex);
         enemies.clear(); // Limpiar enemigos del nivel anterior
+        bullets.clear(); // Limpiar balas del nivel anterior
+        bulletsEnemies.clear();
 
         for (int i = 0; i < currentLevel.getEnemyCount(); i++) {
             if (levelIndex == 2) { // Nivel 3 (índice 2)
@@ -100,7 +102,20 @@ public class Container {
         //Obtengo la posicion de mis enemigos para que disparen
         for (Enemy enemy : enemies) {
             for (Point position : enemy.getPositions()) {
-                bulletsEnemies.add(new Bullet((int) position.getX() + 25, (int) position.getY()));
+                if (currentLevelIndex == 1) {
+                    //Añado las balas para los enemigos segun el nivel 2
+                    bulletsEnemies.add(new Bullet((int) position.getX(), (int) position.getY()));
+                    bulletsEnemies.add(new Bullet((int) position.getX() + 50, (int) position.getY()));
+                } else if (currentLevelIndex == 2) {
+                    //nivel 3
+                    bulletsEnemies.add(new Bullet((int) position.getX() + 120, (int) position.getY() + 60));
+                    bulletsEnemies.add(new Bullet((int) position.getX(), (int) position.getY() + 60));
+                    bulletsEnemies.add(new Bullet((int) position.getX() + 60, (int) position.getY() + 15));
+                } else {
+                    //nivel 1
+                    bulletsEnemies.add(new Bullet((int) position.getX() + 25, (int) position.getY()));
+                }
+
             }
         }
     }
@@ -117,16 +132,17 @@ public class Container {
         for (int i = 0; i < bulletsEnemies.size(); i++) {
             bulletsEnemies.get(i).draw(graphics);
         }
+
         if (levelMessageDisplayed) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             graphics.drawString("Next Level " + currentLevelIndex, (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
-        }
-        if(enemies.isEmpty() && currentLevelIndex == 2){
+        } else if (enemies.isEmpty() && currentLevelIndex >= levels.size() - 1) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            graphics.drawString("You win" , (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
+            graphics.drawString("You win", (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
         }
+
     }
 
     public void moveLeft(int variable) {
@@ -158,29 +174,32 @@ public class Container {
     }
 
     public void chechCollisionsBulletEnemies() {
+        List<Bullet> bulletsToRemove = new ArrayList<>();
+        List<Enemy> enemiesToRemove = new ArrayList<>();
+
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
             Rectangle bulletBounds = new Rectangle(bullet.getX() - 4, bullet.getY(), 7, 13);
 
-            Iterator<Enemy> enemyIterator = enemies.iterator();
-            while (enemyIterator.hasNext()) {
-                Enemy enemy = enemyIterator.next();
+            for (Enemy enemy : enemies) {
                 List<Point> positions = enemy.getPositions();
-                Iterator<Point> positionIterator = positions.iterator();
-                while (positionIterator.hasNext()) {
-                    Point position = positionIterator.next();
+                for (Point position : positions) {
                     Rectangle enemyBounds = new Rectangle(position.x, position.y, 50, 30);
                     if (enemyBounds.intersects(bulletBounds)) {
-                        bulletIterator.remove();
-                        positionIterator.remove();
+                        bulletsToRemove.add(bullet);
+                        enemiesToRemove.add(enemy);
                         hero.setScore(hero.getScore() + 5);
-                        enemyIterator.remove(); // Eliminar el enemigo
-                        break; // Salir del bucle interno después de eliminar la bala y el enemigo
+                        break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                     }
                 }
             }
         }
+
+        // Eliminar balas y enemigos marcados
+        bullets.removeAll(bulletsToRemove);
+        enemies.removeAll(enemiesToRemove);
+
         // Colisiones entre balas de los enemigos y el héroe
         Iterator<Bullet> enemyBulletIterator = bulletsEnemies.iterator();
         while (enemyBulletIterator.hasNext()) {
@@ -196,6 +215,7 @@ public class Container {
             }
         }
     }
+
 
     /*public void checkCollisions() {
         // Colisiones entre balas del héroe y enemigos
@@ -257,6 +277,10 @@ public class Container {
 
     public int life() {
         return hero.getLife();
+    }
+
+    public int sizeNivel() {
+        return levels.size();
     }
 
     public int sizeEnemy() {
