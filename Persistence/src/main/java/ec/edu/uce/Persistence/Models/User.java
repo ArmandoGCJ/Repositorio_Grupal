@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "User")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -18,11 +17,9 @@ public class User {
     @Column
     private int score;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(long id, String name, String password, int life, int score) {
-        this.id = id;
+    public User(String name, String password, int life, int score) {
         this.name = name;
         this.password = password;
         this.life = life;
@@ -67,5 +64,16 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", life=" + life +
+                ", score=" + score +
+                '}';
     }
 }

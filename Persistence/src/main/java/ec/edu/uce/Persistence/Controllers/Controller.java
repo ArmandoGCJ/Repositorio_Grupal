@@ -6,22 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/user")
 public class Controller {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    @GetMapping()
-    public ArrayList<User> GetUsers(){
+    @GetMapping("/all")
+    public List<User> getUsers() {
         return userService.readAll();
     }
 
-    @PostMapping()
-    public User SaveUser(@RequestBody User user){
-        return this.userService.save(user);
+    @PostMapping("/save")
+    public void saveUser(@RequestBody User user) {
+        userService.save(user);
     }
 
-
+    @GetMapping("/getuser")
+    public List<User> getUserByName(@RequestParam(name = "nombre") String name) {
+        return userService.findByName(name);
+    }
 }
