@@ -180,20 +180,49 @@ public class Container {
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
-            Rectangle bulletBounds = new Rectangle(bullet.getX() - 4, bullet.getY(), 7, 13);
 
-            for (Enemy enemy : enemies) {
-                List<Point> positions = enemy.getPositions();
-                for (Point position : positions) {
-                    Rectangle enemyBounds = new Rectangle(position.x, position.y, 50, 30);
-                    if (enemyBounds.intersects(bulletBounds)) {
-                        bulletsToRemove.add(bullet);
-                        enemiesToRemove.add(enemy);
-                        hero.setScore(hero.getScore() + 5);
-                        break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
+            if (currentLevelIndex == 0) {
+                for (Enemy enemy : enemies) {
+                    List<Point> positions = enemy.getPositions();
+                    for (Point position : positions) {
+                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 20, 50, 20);
+                        if (enemyBounds.intersects(bullet.getRectangle())) {
+                            bulletsToRemove.add(bullet);
+                            enemiesToRemove.add(enemy);
+                            hero.setScore(hero.getScore() + 5);
+                            break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
+                        }
                     }
                 }
+            }else if(currentLevelIndex == 1){
+                for (Enemy enemy : enemies) {
+                    List<Point> positions = enemy.getPositions();
+                    for (Point position : positions) {
+                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 20, 50, 20);
+                        if (enemyBounds.intersects(bullet.getRectangle())) {
+                            bulletsToRemove.add(bullet);
+                            enemiesToRemove.add(enemy);
+                            hero.setScore(hero.getScore() + 10);
+                            break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
+                        }
+                    }
+                }
+            } else {
+                for (Enemy enemy : enemies) {
+                    List<Point> positions = enemy.getPositions();
+                    for (Point position : positions) {
+                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 25, 125, 50);
+                        if (enemyBounds.intersects(bullet.getRectangle())) {
+                            bulletsToRemove.add(bullet);
+                            enemiesToRemove.add(enemy);
+                            hero.setScore(hero.getScore() + 5);
+                            break;
+                        }
+                    }
+                }
+
             }
+
         }
 
         // Eliminar balas y enemigos marcados
@@ -204,78 +233,32 @@ public class Container {
         Iterator<Bullet> enemyBulletIterator = bulletsEnemies.iterator();
         while (enemyBulletIterator.hasNext()) {
             Bullet bullet = enemyBulletIterator.next();
-            Rectangle bulletBounds = new Rectangle(bullet.getX() - 4, bullet.getY(), 7, 13);
 
-            if (hero.collision(bulletBounds)) {
+            if (hero.collision(bullet.getRectangle())) {
                 enemyBulletIterator.remove();
-                hero.setLife(hero.getLife() - 5);
-                if (hero.getLife() <= 0) {
-                    hero.setLife(0);
-                }
-            }
-        }
-    }
+                if (currentLevelIndex == 0) {
+                    hero.setLife(hero.getLife() - 5);
+                    if (hero.getLife() <= 0) {
+                        hero.setLife(0);
+                    }
 
-
-    /*public void checkCollisions() {
-        // Colisiones entre balas del héroe y enemigos
-        Iterator<Bullet> bulletIterator = bullets.iterator();
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-            Rectangle bulletBounds = new Rectangle(bullet.getX() - 4, bullet.getY(), 7, 13);
-
-            Iterator<Enemy> enemyIterator = enemies.iterator();
-            while (enemyIterator.hasNext()) {
-                Enemy enemy = enemyIterator.next();
-                List<Point> positions = enemy.getPositions();
-                Iterator<Point> positionIterator = positions.iterator();
-                while (positionIterator.hasNext()) {
-                    Point position = positionIterator.next();
-                    Rectangle enemyBounds = new Rectangle(position.x, position.y, 50, 30);
-                    if (enemyBounds.intersects(bulletBounds)) {
-                        bulletIterator.remove();
-                        positionIterator.remove();
-                        hero.setScore(hero.getScore() + 5);
-                        enemyIterator.remove(); // Eliminar el enemigo
-                        break; // Salir del bucle interno después de eliminar la bala y el enemigo
+                } else if (currentLevelIndex == 1) {
+                    hero.setLife(hero.getLife() - 10);
+                    if (hero.getLife() <= 0) {
+                        hero.setLife(0);
                     }
                 }
             }
+
         }
 
-        // Colisiones entre balas de los enemigos y el héroe
-        Iterator<Bullet> enemyBulletIterator = bulletsEnemies.iterator();
-        while (enemyBulletIterator.hasNext()) {
-            Bullet bullet = enemyBulletIterator.next();
-            Rectangle bulletBounds = new Rectangle(bullet.getX() - 4, bullet.getY(), 7, 13);
-
-            if (hero.collision(bulletBounds)) {
-                enemyBulletIterator.remove();
-                hero.setLife(hero.getLife() - 5);
-                if (hero.getLife() <= 0) {
-                    hero.setLife(0);
-                }
-            }
-        }
-
-        // Colisiones entre el héroe y los enemigos
-        Rectangle heroBounds = new Rectangle(hero.getX(), hero.getY(), 30, 60);
-        for (Enemy enemy : enemies) {
-            if (enemy.checkCollisionWith(heroBounds)) {
-                hero.setLife(hero.getLife() - 10);
-                if (hero.getLife() <= 0) {
-                    hero.setLife(0);
-                }
-            }
-        }
-    }*/
-
+    }
 
     public int score() {
         return hero.getScore();
     }
 
-    public int life() {
+    public int lifeHero() {
         return hero.getLife();
     }
 

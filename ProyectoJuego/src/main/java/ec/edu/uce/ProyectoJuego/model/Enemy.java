@@ -24,7 +24,6 @@ public class Enemy implements Drawable, Movable {
     // Constructor por defecto
     public Enemy() {
         this(50, 30); // Llamada al nuevo constructor con tamaño por defecto
-
     }
 
     // Nuevo constructor con tamaño personalizado
@@ -64,7 +63,7 @@ public class Enemy implements Drawable, Movable {
     public void moveDown(int variable) {
         for (int i = 0; i < positions.size(); i++) {
             Point position = positions.get(i);
-            position.setLocation(position.getX(), position.getY() + (variable * 0.4f));
+            position.setLocation(position.getX(), position.getY() + (variable * 0.5f));
         }
     }
 
@@ -108,7 +107,6 @@ public class Enemy implements Drawable, Movable {
         }
         return false;
     }
-
 
     public int getLife() {
         return life;

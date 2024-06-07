@@ -60,7 +60,6 @@ public class GamePanel extends JPanel implements KeyListener {
     private void updateGame() {
         if (!gameActive)
             return;
-
         if (keysPressed.contains(KeyEvent.VK_A)&& !isPaused) {
             container.moveLeft(10);
         }
@@ -85,15 +84,14 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawString("Hola amigo", 0, 20);
 
         g.setColor(Color.WHITE);
-        g.drawRect(1, 25, container.life() + 3, 20);
+        g.drawRect(1, 25, container.lifeHero() + 3, 20);
         g.setColor(Color.GREEN);
-        g.fillRect(3, 27, container.life(), 16);
-        if (container.life() <= 0) {
+        g.fillRect(3, 27, container.lifeHero(), 16);
+        if (container.lifeHero() <= 0) {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             g.drawString("GAME OVER", (getWidth() / 3), getHeight() / 2);
             gameActive = false;
-
         }
 
         if (isPaused) {
@@ -101,7 +99,6 @@ public class GamePanel extends JPanel implements KeyListener {
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             g.drawString("PAUSED", (getWidth() / 3), getHeight() / 2);
         }
-
 
     }
 
