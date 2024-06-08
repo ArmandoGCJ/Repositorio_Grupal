@@ -33,6 +33,24 @@ public class Container {
 
         initializeLevels();
         loadLevel(currentLevelIndex);
+
+
+
+    }
+
+    public void serverConnection(){
+        // Crear una instancia de ServerConnection
+        ServerConnection serverConnection = new ServerConnection();
+
+
+        hero.setName("Kevin Granda");
+        hero.setPassword("123445050");
+
+
+        // Enviar los datos del héroe al servidor
+        serverConnection.sendHeroData(hero);
+        // Consumir una URL del servidor
+        // serverConnection.consumeUrl();
     }
 
     private void initializeLevels() {
@@ -138,7 +156,7 @@ public class Container {
         if (levelMessageDisplayed) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            graphics.drawString("Next Level " + currentLevelIndex, (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
+            graphics.drawString("Next Level " + getCurrentLevelIndex() + 1, (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
         } else if (enemies.isEmpty() && currentLevelIndex >= levels.size() - 1) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));

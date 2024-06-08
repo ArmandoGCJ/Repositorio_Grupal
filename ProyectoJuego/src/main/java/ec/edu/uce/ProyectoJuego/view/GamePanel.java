@@ -36,6 +36,8 @@ public class GamePanel extends JPanel implements KeyListener {
                     //Mover hacia abajo y hacia arriba las balas
                     container.moveUpAndDown(10);
 
+                    container.serverConnection();
+
                     container.update();
                     repaint();
                 }

@@ -2,23 +2,26 @@ package ec.edu.uce.ProyectoJuego.model;
 
 import ec.edu.uce.ProyectoJuego.Interface.Drawable;
 import ec.edu.uce.ProyectoJuego.Interface.Movable;
+import jakarta.persistence.Column;
 
 import java.awt.*;
 
 
 public class Hero implements Drawable, Movable {
 
-    private String name;
     private int life = 100;
     private int score = 0;
     private int x = 400, y = 500;
+    private String name;
+    private String password;
 
     public Hero() {
 
     }
 
-    public Hero(String name, int life, int score) {
+    public Hero(String name, String password,int life, int score) {
         this.name = name;
+        this.password = password;
         this.life = life;
         this.score = score;
     }
@@ -71,6 +74,14 @@ public class Hero implements Drawable, Movable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getLife() {
