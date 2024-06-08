@@ -1,6 +1,7 @@
 package ec.edu.uce.ProyectoJuego.view;
 
 import ec.edu.uce.ProyectoJuego.controller.Container;
+import ec.edu.uce.ProyectoJuego.model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +20,32 @@ public class GamePanel extends JPanel implements KeyListener {
     private boolean gameActive = true;
     private Set<Integer> keysPressed = new HashSet<>();
     private Timer timer;
+    JLabel scoreLabel;
+    JLabel nameLabel;
+    User u = new User();
 
     public GamePanel() {
         setBackground(Color.BLACK);
         setFocusable(true);
+        setLayout(null);
         container = new Container();
         addKeyListener(this);
+
+        scoreLabel = new JLabel("Score: " + container.score());
+        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setFont(new Font("Times New Roman", Font.PLAIN,20));
+        Dimension size = scoreLabel.getPreferredSize();
+        scoreLabel.setBounds(800 - size.width-60, 0, size.width, size.height);
+        add(scoreLabel);
+
+        nameLabel = new JLabel();
+        nameLabel.setText(u.getName());
+        nameLabel.setForeground(Color.WHITE);
+        nameLabel.setFont(new Font("Times New Roman", Font.PLAIN,20));
+        Dimension sizeN = nameLabel.getPreferredSize();
+        nameLabel.setBounds(30, 0, size.width, size.height);
+        add(nameLabel);
+
 
         //Tiempo de refresco del juego
         gameTimer = new Timer(1000 / 60, new ActionListener() {
@@ -81,10 +102,10 @@ public class GamePanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         container.draw(g);
 
-        g.setColor(Color.WHITE);
+      /*  g.setColor(Color.WHITE);
         g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         g.drawString("Score: " + container.score(), 670, 20);
-        g.drawString("Hola amigo", 0, 20);
+        g.drawString("Hola amigo", 0, 20);*/
 
         g.setColor(Color.WHITE);
         g.drawRect(1, 25, 103, 20);
