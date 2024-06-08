@@ -1,10 +1,15 @@
 package ec.edu.uce.ProyectoJuego.model;
 
+import ec.edu.uce.ProyectoJuego.Interface.Drawable;
+import ec.edu.uce.ProyectoJuego.Interface.IHitBox;
+import ec.edu.uce.ProyectoJuego.Interface.Movable;
+
 import java.awt.*;
 
-public class Bullet implements Drawable,Movable{
+public class Bullet implements Drawable, Movable, IHitBox {
 
     private int x, y;
+    private int damage = 0;
 
     public Bullet(int x, int y) {
         this.x = x;
@@ -44,24 +49,18 @@ public class Bullet implements Drawable,Movable{
 
     }
 
-    public Rectangle getRectangle(){
-        Rectangle bulletBounds = new Rectangle(x - 4, y, 7, 13);
+    @Override
+    public Rectangle getRectangle(int width, int heigth){
+        Rectangle bulletBounds = new Rectangle(x - 4, y, width, heigth);
         return bulletBounds;
     }
 
-    public int getX() {
-        return x;
+    public int getDamage() {
+        return damage;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 }

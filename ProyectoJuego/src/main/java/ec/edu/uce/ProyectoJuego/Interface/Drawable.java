@@ -1,4 +1,4 @@
-package ec.edu.uce.ProyectoJuego.model;
+package ec.edu.uce.ProyectoJuego.Interface;
 
 import java.awt.*;
 

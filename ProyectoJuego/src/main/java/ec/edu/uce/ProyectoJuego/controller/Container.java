@@ -13,7 +13,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class Container {
 
     private Hero hero;
@@ -85,8 +84,7 @@ public class Container {
 
     public void update() {
         if (!delayActive) {
-            moveDown(1);
-            moveUp(10);
+            chechCollisionsBullet();
             chechCollisionsBulletEnemies();
             if (enemies.isEmpty() && !levelMessageDisplayed) {
                 nextLevel();
@@ -99,23 +97,23 @@ public class Container {
     }
 
     public void setBulletEnemy() {
-        //Obtengo la posicion de mis enemigos para que disparen
+        //Añado las balas para los enemigos segun el nivel
         for (Enemy enemy : enemies) {
             for (Point position : enemy.getPositions()) {
-                if (currentLevelIndex == 1) {
-                    //Añado las balas para los enemigos segun el nivel 2
+                if (currentLevelIndex == 0) {
+                    //nivel 1
+                    bulletsEnemies.add(new Bullet((int) position.getX() + 25, (int) position.getY()));
+
+                } else if (currentLevelIndex == 1) {
+                    //nivel 2
                     bulletsEnemies.add(new Bullet((int) position.getX(), (int) position.getY()));
                     bulletsEnemies.add(new Bullet((int) position.getX() + 50, (int) position.getY()));
-                } else if (currentLevelIndex == 2) {
+                } else {
                     //nivel 3
                     bulletsEnemies.add(new Bullet((int) position.getX() + 120, (int) position.getY() + 60));
                     bulletsEnemies.add(new Bullet((int) position.getX(), (int) position.getY() + 60));
                     bulletsEnemies.add(new Bullet((int) position.getX() + 60, (int) position.getY() + 15));
-                } else {
-                    //nivel 1
-                    bulletsEnemies.add(new Bullet((int) position.getX() + 25, (int) position.getY()));
                 }
-
             }
         }
     }
@@ -123,15 +121,19 @@ public class Container {
     public void draw(Graphics graphics) {
         hero.draw(graphics);
 
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).draw(graphics);
+        for (Enemy enemy : enemies) {
+            enemy.draw(graphics);
         }
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).draw(graphics);
+        for (Bullet bullet : bullets) {
+            bullet.draw(graphics);
         }
-        for (int i = 0; i < bulletsEnemies.size(); i++) {
-            bulletsEnemies.get(i).draw(graphics);
+        for (Bullet bullet : bulletsEnemies) {
+            bullet.draw(graphics);
         }
+
+        int yLinea = (int) (graphics.getClipBounds().height * 0.76);
+        graphics.setColor(Color.RED);
+        graphics.drawLine(0, yLinea, graphics.getClipBounds().width, yLinea);
 
         if (levelMessageDisplayed) {
             graphics.setColor(Color.WHITE);
@@ -156,16 +158,16 @@ public class Container {
     }
 
     public void moveDown(int variable) {
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).moveDown(variable);
-            enemies.get(i).move();
+        for (Enemy enemy:enemies) {
+            enemy.moveDown(variable);
+            enemy.move();
         }
     }
 
-    public void moveUp(int variable) {
+    public void moveUpAndDown(int variable) {
         //Mueve hacia arriba
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).moveUp(variable);
+        for (Bullet bullet : bullets) {
+            bullet.moveUp(variable);
         }
         //Mueve hacia abajo
         for (Bullet bullet : bulletsEnemies) {
@@ -173,7 +175,7 @@ public class Container {
         }
     }
 
-    public void chechCollisionsBulletEnemies() {
+    public void chechCollisionsBullet() {
         List<Bullet> bulletsToRemove = new ArrayList<>();
         List<Enemy> enemiesToRemove = new ArrayList<>();
 
@@ -183,58 +185,74 @@ public class Container {
 
             if (currentLevelIndex == 0) {
                 for (Enemy enemy : enemies) {
-                    List<Point> positions = enemy.getPositions();
-                    for (Point position : positions) {
-                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 20, 50, 20);
-                        if (enemyBounds.intersects(bullet.getRectangle())) {
-                            bulletsToRemove.add(bullet);
+                    if (enemy.getRectangle(50, 20).intersects(bullet.getRectangle(7, 13))) {
+                        bulletsToRemove.add(bullet);
+                        bullet.setDamage(100);
+                        enemy.receiveDamage(bullet.getDamage());
+                        if (enemy.getLife() <= 0) {
                             enemiesToRemove.add(enemy);
-                            hero.setScore(hero.getScore() + 5);
-                            break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                         }
+                        hero.setScore(hero.getScore() + 5);
+                        break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                     }
                 }
-            }else if(currentLevelIndex == 1){
+            } else if (currentLevelIndex == 1) {
                 for (Enemy enemy : enemies) {
-                    List<Point> positions = enemy.getPositions();
-                    for (Point position : positions) {
-                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 20, 50, 20);
-                        if (enemyBounds.intersects(bullet.getRectangle())) {
-                            bulletsToRemove.add(bullet);
+                    if (enemy.getRectangle(50, 20).intersects(bullet.getRectangle(7, 13))) {
+                        bulletsToRemove.add(bullet);
+                        bullet.setDamage(34);
+                        enemy.receiveDamage(bullet.getDamage());
+                        if (enemy.getLife() <= 0) {
                             enemiesToRemove.add(enemy);
-                            hero.setScore(hero.getScore() + 10);
-                            break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                         }
+                        hero.setScore(hero.getScore() + 10);
+                        break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                     }
                 }
             } else {
                 for (Enemy enemy : enemies) {
-                    List<Point> positions = enemy.getPositions();
-                    for (Point position : positions) {
-                        Rectangle enemyBounds = new Rectangle(position.x, position.y - 25, 125, 50);
-                        if (enemyBounds.intersects(bullet.getRectangle())) {
-                            bulletsToRemove.add(bullet);
-                            enemiesToRemove.add(enemy);
-                            hero.setScore(hero.getScore() + 5);
-                            break;
+                    if (enemy.getRectangle(125, 50).intersects(bullet.getRectangle(7, 13))) {
+                        bulletsToRemove.add(bullet);
+                        if (hero.getLife() >= 75) {
+                            bullet.setDamage(15);
+                            enemy.receiveDamage(bullet.getDamage());
+                            if (enemy.getLife() <= 0) {
+                                enemiesToRemove.add(enemy);
+                            }
+                            hero.setScore(hero.getScore() + 15);
+                        } else if (hero.getLife() > 50 || hero.getLife() < 75) {
+                            bullet.setDamage(10);
+                            enemy.receiveDamage(bullet.getDamage());
+                            if (enemy.getLife() <= 0) {
+                                enemiesToRemove.add(enemy);
+                            }
+                        } else if (hero.getLife() < 50) {
+                            bullet.setDamage(5);
+                            enemy.receiveDamage(bullet.getDamage());
+                            if (enemy.getLife() <= 0) {
+                                enemiesToRemove.add(enemy);
+                            }
                         }
+                        break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                     }
                 }
 
             }
 
         }
-
         // Eliminar balas y enemigos marcados
         bullets.removeAll(bulletsToRemove);
         enemies.removeAll(enemiesToRemove);
 
+    }
+
+    public void chechCollisionsBulletEnemies() {
         // Colisiones entre balas de los enemigos y el héroe
         Iterator<Bullet> enemyBulletIterator = bulletsEnemies.iterator();
         while (enemyBulletIterator.hasNext()) {
             Bullet bullet = enemyBulletIterator.next();
 
-            if (hero.collision(bullet.getRectangle())) {
+            if (hero.collision(bullet.getRectangle(7, 13))) {
                 enemyBulletIterator.remove();
                 if (currentLevelIndex == 0) {
                     hero.setLife(hero.getLife() - 5);
@@ -247,11 +265,14 @@ public class Container {
                     if (hero.getLife() <= 0) {
                         hero.setLife(0);
                     }
+                } else {
+                    hero.setLife(hero.getLife() - 15);
+                    if (hero.getLife() <= 0) {
+                        hero.setLife(0);
+                    }
                 }
             }
-
         }
-
     }
 
     public int score() {

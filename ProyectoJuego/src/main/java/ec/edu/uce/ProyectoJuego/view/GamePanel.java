@@ -31,6 +31,11 @@ public class GamePanel extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!isPaused) {
+                    //Mover hacia abajo los enemigos
+                    container.moveDown((int) 0.9f);
+                    //Mover hacia abajo y hacia arriba las balas
+                    container.moveUpAndDown(10);
+
                     container.update();
                     repaint();
                 }
@@ -74,30 +79,26 @@ public class GamePanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         container.draw(g);
 
-        int yLinea = (int) (getHeight() * 0.76);
-        g.setColor(Color.RED);
-        g.drawLine(0, yLinea, getWidth(), yLinea);
-
         g.setColor(Color.WHITE);
         g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         g.drawString("Score: " + container.score(), 670, 20);
         g.drawString("Hola amigo", 0, 20);
 
         g.setColor(Color.WHITE);
-        g.drawRect(1, 25, container.lifeHero() + 3, 20);
+        g.drawRect(1, 25, 103, 20);
         g.setColor(Color.GREEN);
         g.fillRect(3, 27, container.lifeHero(), 16);
         if (container.lifeHero() <= 0) {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            g.drawString("GAME OVER", (getWidth() / 3), getHeight() / 2);
+            g.drawString("GAME OVER", (getWidth() / 3 ), getHeight() / 2);
             gameActive = false;
         }
 
         if (isPaused) {
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            g.drawString("PAUSED", (getWidth() / 3), getHeight() / 2);
+            g.drawString("PAUSED", (int) (getWidth() / 3), getHeight() / 2);
         }
 
     }

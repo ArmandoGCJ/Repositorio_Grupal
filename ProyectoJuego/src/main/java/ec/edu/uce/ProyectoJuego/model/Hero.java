@@ -1,5 +1,8 @@
 package ec.edu.uce.ProyectoJuego.model;
 
+import ec.edu.uce.ProyectoJuego.Interface.Drawable;
+import ec.edu.uce.ProyectoJuego.Interface.Movable;
+
 import java.awt.*;
 
 
