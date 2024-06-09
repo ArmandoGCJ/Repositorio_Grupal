@@ -23,50 +23,52 @@ public class GamePanel extends JPanel implements KeyListener {
     JLabel scoreLabel;
     JLabel nameLabel;
     User u = new User();
+    private final int RED_LINE_Y = 400; // y-coordinate for the red line
 
     public GamePanel() {
         setBackground(Color.BLACK);
         setFocusable(true);
-        setLayout(null);
-        container = new Container();
+        requestFocusInWindow(); // Ensure the panel gets focus
         addKeyListener(this);
+        container = new Container();
 
-        scoreLabel = new JLabel("Score: " + container.score());
+        scoreLabel = new JLabel(" ");
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Times New Roman", Font.PLAIN,20));
+        scoreLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         Dimension size = scoreLabel.getPreferredSize();
-        scoreLabel.setBounds(800 - size.width-60, 0, size.width, size.height);
+        scoreLabel.setBounds(800 - size.width - 60, 0, size.width, size.height);
         add(scoreLabel);
 
         nameLabel = new JLabel();
         nameLabel.setText(u.getName());
         nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("Times New Roman", Font.PLAIN,20));
+        nameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         Dimension sizeN = nameLabel.getPreferredSize();
         nameLabel.setBounds(30, 0, size.width, size.height);
         add(nameLabel);
 
-
-        //Tiempo de refresco del juego
+        // Game timer for refreshing the game
         gameTimer = new Timer(1000 / 60, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!isPaused) {
-                    //Mover hacia abajo los enemigos
-                    container.moveDown((int) 0.9f);
-                    //Mover hacia abajo y hacia arriba las balas
+                    container.moveDown((int) 1f);
                     container.moveUpAndDown(10);
-
                     container.serverConnection();
-
                     container.update();
+
+                    // Check if any enemy has crossed the red line
+                    if (container.isEnemyBeyondLine(RED_LINE_Y)) {
+                        gameActive = false;
+                    }
+
                     repaint();
                 }
             }
         });
         gameTimer.start();
 
-        //Tiempo para que los enemigos disparen
+        // Timer for enemy bullets
         enemyBulletTimer = new Timer(2500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,13 +87,14 @@ public class GamePanel extends JPanel implements KeyListener {
         });
         timer.start();
     }
+
     private void updateGame() {
         if (!gameActive)
             return;
-        if (keysPressed.contains(KeyEvent.VK_A)&& !isPaused) {
+        if (keysPressed.contains(KeyEvent.VK_A) && !isPaused) {
             container.moveLeft(10);
         }
-        if (keysPressed.contains(KeyEvent.VK_D)&& !isPaused) {
+        if (keysPressed.contains(KeyEvent.VK_D) && !isPaused) {
             container.moveRight(10);
         }
         repaint();
@@ -102,19 +105,22 @@ public class GamePanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         container.draw(g);
 
-      /*  g.setColor(Color.WHITE);
+        // Draw the red line
+        g.setColor(Color.RED);
+        g.drawLine(0, RED_LINE_Y, getWidth(), RED_LINE_Y);
+
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         g.drawString("Score: " + container.score(), 670, 20);
-        g.drawString("Hola amigo", 0, 20);*/
 
         g.setColor(Color.WHITE);
         g.drawRect(1, 25, 103, 20);
         g.setColor(Color.GREEN);
         g.fillRect(3, 27, container.lifeHero(), 16);
-        if (container.lifeHero() <= 0) {
+        if (container.lifeHero() <= 0 || !gameActive) {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            g.drawString("GAME OVER", (getWidth() / 3 ), getHeight() / 2);
+            g.drawString("GAME OVER", (getWidth() / 3), getHeight() / 2);
             gameActive = false;
         }
 
@@ -123,11 +129,11 @@ public class GamePanel extends JPanel implements KeyListener {
             g.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             g.drawString("PAUSED", (int) (getWidth() / 3), getHeight() / 2);
         }
-
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // Not used
     }
 
     @Override
@@ -138,11 +144,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE && !isPaused) {
             container.setBulletHero();
+            repaint();
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             togglePause();
         }
-
     }
 
     @Override

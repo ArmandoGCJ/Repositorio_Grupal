@@ -26,6 +26,9 @@ public class Hero implements Drawable, Movable {
         this.score = score;
     }
 
+    public Hero(int life, int score) {
+    }
+
     @Override
     public void draw(Graphics graphics) {
         int[] cord_x = {x, x + 40, x - 40};

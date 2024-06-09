@@ -61,7 +61,6 @@ public class Enemy implements Drawable, Movable, IHitBox {
         }
     }
 
-
     @Override
     public void moveUp(int variable) {
 
@@ -107,10 +106,10 @@ public class Enemy implements Drawable, Movable, IHitBox {
     }
 
     @Override
-    public Rectangle getRectangle(int width, int heigth) {
+    public Rectangle getRectangle(int width, int height) {
         Rectangle enemy = null;
         for (Point position : positions) {
-            enemy = new Rectangle(position.x, position.y - 20, width, heigth);
+            enemy = new Rectangle(position.x, position.y - 20, width, height);
         }
         return enemy;
     }
@@ -135,4 +134,11 @@ public class Enemy implements Drawable, Movable, IHitBox {
         return positions;
     }
 
+    // Method to get the y-coordinate of the first position
+    public int getY() {
+        if (!positions.isEmpty()) {
+            return positions.get(0).y;
+        }
+        return -1; // or some default value indicating no positions
+    }
 }

@@ -48,7 +48,7 @@ public class Container {
 
 
         // Enviar los datos del héroe al servidor
-        serverConnection.sendHeroData(hero);
+       // serverConnection.sendHeroData(hero);
         // Consumir una URL del servidor
         // serverConnection.consumeUrl();
     }
@@ -100,6 +100,17 @@ public class Container {
         }
     }
 
+    // In Container class
+    public boolean isEnemyBeyondLine(int lineY) {
+        for (Enemy enemy : enemies) { // assuming you have a list of enemies
+            if (enemy.getY() >= lineY) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void update() {
         if (!delayActive) {
             chechCollisionsBullet();
@@ -149,18 +160,21 @@ public class Container {
             bullet.draw(graphics);
         }
 
-        int yLinea = (int) (graphics.getClipBounds().height * 0.76);
-        graphics.setColor(Color.RED);
-        graphics.drawLine(0, yLinea, graphics.getClipBounds().width, yLinea);
+        //int yLinea = (int) (graphics.getClipBounds().height * 0.76);
+       // graphics.setColor(Color.RED);
+        //graphics.drawLine(0, yLinea, graphics.getClipBounds().width, yLinea);
 
         if (levelMessageDisplayed) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
-            graphics.drawString("Next Level " + getCurrentLevelIndex() + 1, (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
+            graphics.drawString("Next Level " + (getCurrentLevelIndex() + 1), (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
         } else if (enemies.isEmpty() && currentLevelIndex >= levels.size() - 1) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             graphics.drawString("You win", (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
+        } else if (enemies.isEmpty()) {
+            levelMessageDisplayed = true;
+            currentLevelIndex++;
         }
 
     }
