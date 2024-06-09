@@ -1,7 +1,6 @@
 package ec.edu.uce.ProyectoJuego.view;
 
 import ec.edu.uce.ProyectoJuego.controller.Container;
-import ec.edu.uce.ProyectoJuego.model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +19,6 @@ public class GamePanel extends JPanel implements KeyListener {
     private boolean gameActive = true;
     private Set<Integer> keysPressed = new HashSet<>();
     private Timer timer;
-    JLabel scoreLabel;
-    JLabel nameLabel;
-    User u = new User();
     private final int RED_LINE_Y = 400; // y-coordinate for the red line
 
     public GamePanel() {
@@ -31,21 +27,7 @@ public class GamePanel extends JPanel implements KeyListener {
         requestFocusInWindow(); // Ensure the panel gets focus
         addKeyListener(this);
         container = new Container();
-
-        scoreLabel = new JLabel(" ");
-        scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        Dimension size = scoreLabel.getPreferredSize();
-        scoreLabel.setBounds(800 - size.width - 60, 0, size.width, size.height);
-        add(scoreLabel);
-
-        nameLabel = new JLabel();
-        nameLabel.setText(u.getName());
-        nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        Dimension sizeN = nameLabel.getPreferredSize();
-        nameLabel.setBounds(30, 0, size.width, size.height);
-        add(nameLabel);
+        container.serverConnection();
 
         // Game timer for refreshing the game
         gameTimer = new Timer(1000 / 60, new ActionListener() {
@@ -54,8 +36,10 @@ public class GamePanel extends JPanel implements KeyListener {
                 if (!isPaused) {
                     container.moveDown((int) 1f);
                     container.moveUpAndDown(10);
-                    container.serverConnection();
                     container.update();
+
+                    //Actualizar estado del Jugador
+                    container.updateUserData();
 
                     // Check if any enemy has crossed the red line
                     if (container.isEnemyBeyondLine(RED_LINE_Y)) {
@@ -67,6 +51,7 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         });
         gameTimer.start();
+
 
         // Timer for enemy bullets
         enemyBulletTimer = new Timer(2500, new ActionListener() {
@@ -133,7 +118,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // Not used
+
     }
 
     @Override

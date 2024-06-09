@@ -1,6 +1,6 @@
 package ec.edu.uce.ProyectoJuego.model;
 
-public class User extends Hero{
+public class User extends Hero {
     private long id;
     private String name;
     private String password;
@@ -13,8 +13,8 @@ public class User extends Hero{
 
     }
 
-    public User (long id,String name, String password,int life,int score)
-    {    super( life,score);
+    public User(long id, String name, String password, int life, int score) {
+        super(id, name, password, life, score);
         this.id = id;
         this.name = name;
         this.password = password;

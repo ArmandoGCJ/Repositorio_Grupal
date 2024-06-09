@@ -41,6 +41,29 @@ public class ServerConnection {
         }
     }
 
+    public void updateUserData(Hero heroData) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(heroData);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:8080/user/update"))
+                    .timeout(Duration.ofMinutes(1))
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(jsonString))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                System.out.println("Error: " + response.statusCode());
+            } else {
+                System.out.println("User updated successfully.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void consumeUrl() {
         try {
             HttpClient client = HttpClient.newHttpClient();

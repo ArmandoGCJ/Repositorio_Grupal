@@ -25,32 +25,17 @@ public class Container {
     private boolean delayActive = false;
 
     public Container() {
+
         hero = new Hero();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         bulletsEnemies = new ArrayList<>();
         levels = new ArrayList<>();
 
+
         initializeLevels();
         loadLevel(currentLevelIndex);
 
-
-
-    }
-
-    public void serverConnection(){
-        // Crear una instancia de ServerConnection
-        ServerConnection serverConnection = new ServerConnection();
-
-
-        hero.setName("Kevin Granda");
-        hero.setPassword("123445050");
-
-
-        // Enviar los datos del héroe al servidor
-       // serverConnection.sendHeroData(hero);
-        // Consumir una URL del servidor
-        // serverConnection.consumeUrl();
     }
 
     private void initializeLevels() {
@@ -100,6 +85,27 @@ public class Container {
         }
     }
 
+    public void serverConnection(){
+		// Crear una instancia de ServerConnection
+		ServerConnection serverConnection = new ServerConnection();
+        hero.setId(56);
+		hero.setName("Ana");
+		hero.setPassword("qeqehfgjghjghj");
+
+		// Enviar los datos del héroe al servidor
+		serverConnection.sendHeroData(hero);
+	}
+
+    public void updateUserData() {
+        ServerConnection serverConnection = new ServerConnection();
+        hero.getId();
+        hero.getName();
+        hero.getPassword();
+        hero.getLife();
+        hero.getScore();
+        serverConnection.updateUserData(hero);
+    }
+
     // In Container class
     public boolean isEnemyBeyondLine(int lineY) {
         for (Enemy enemy : enemies) { // assuming you have a list of enemies
@@ -109,7 +115,6 @@ public class Container {
         }
         return false;
     }
-
 
     public void update() {
         if (!delayActive) {
@@ -160,10 +165,6 @@ public class Container {
             bullet.draw(graphics);
         }
 
-        //int yLinea = (int) (graphics.getClipBounds().height * 0.76);
-       // graphics.setColor(Color.RED);
-        //graphics.drawLine(0, yLinea, graphics.getClipBounds().width, yLinea);
-
         if (levelMessageDisplayed) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
@@ -190,7 +191,7 @@ public class Container {
     }
 
     public void moveDown(int variable) {
-        for (Enemy enemy:enemies) {
+        for (Enemy enemy : enemies) {
             enemy.moveDown(variable);
             enemy.move();
         }
@@ -252,7 +253,7 @@ public class Container {
                                 enemiesToRemove.add(enemy);
                             }
                             hero.setScore(hero.getScore() + 15);
-                        } else if (hero.getLife() > 50 || hero.getLife() < 75) {
+                        } else if (hero.getLife() > 50 && hero.getLife() < 75) {
                             bullet.setDamage(10);
                             enemy.receiveDamage(bullet.getDamage());
                             if (enemy.getLife() <= 0) {
@@ -303,6 +304,7 @@ public class Container {
                         hero.setLife(0);
                     }
                 }
+
             }
         }
     }
@@ -316,7 +318,7 @@ public class Container {
     }
 
     public int sizeNivel() {
-        return levels.size();
+        return currentLevelIndex + 1;
     }
 
     public int sizeEnemy() {

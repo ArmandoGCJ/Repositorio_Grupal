@@ -9,7 +9,8 @@ import java.awt.*;
 
 public class Hero implements Drawable, Movable {
 
-    private int life = 100;
+    private long id;
+    private int life = 0;
     private int score = 0;
     private int x = 400, y = 500;
     private String name;
@@ -19,14 +20,12 @@ public class Hero implements Drawable, Movable {
 
     }
 
-    public Hero(String name, String password,int life, int score) {
-        this.name = name;
-        this.password = password;
+    public Hero(long id, String name, String password, int life, int score) {
+        this.id = id;
         this.life = life;
         this.score = score;
-    }
-
-    public Hero(int life, int score) {
+        this.name = name;
+        this.password = password;
     }
 
     @Override
@@ -71,6 +70,14 @@ public class Hero implements Drawable, Movable {
         return heroBounds.intersects(other);
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -107,15 +114,8 @@ public class Hero implements Drawable, Movable {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
 }
