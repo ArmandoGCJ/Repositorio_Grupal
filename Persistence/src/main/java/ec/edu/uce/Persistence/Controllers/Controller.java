@@ -28,4 +28,9 @@ public class Controller {
     public List<User> getUserByName(@RequestParam(name = "nombre") String name) {
         return userService.findByName(name);
     }
+
+    @PutMapping("/update")
+    public void updateUser(@RequestBody User user) {
+        userService.update(user);
+    }
 }

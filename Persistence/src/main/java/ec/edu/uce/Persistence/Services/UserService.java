@@ -19,6 +19,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public void save(User user) {
+
         userRepository.save(user);
     }
 
@@ -38,4 +39,21 @@ public class UserService {
     public List<User> findByName(String name) {
         return userRepository.findByName(name);
     }
+
+    public void update(User updatedUser) {
+        Optional<User> existingUserOptional = userRepository.findById(updatedUser.getId());
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            existingUser.setName(updatedUser.getName());
+            existingUser.setPassword(updatedUser.getPassword());
+            existingUser.setLife(updatedUser.getLife());
+            existingUser.setScore(updatedUser.getScore());
+            // Puedes actualizar otros campos aquí si es necesario
+            userRepository.save(existingUser);
+            System.out.println("Usuario actualizado correctamente");
+        } else {
+            System.out.println("No se encontró un usuario con el ID: " + updatedUser.getId() + " para actualizar");
+        }
+    }
+
 }
