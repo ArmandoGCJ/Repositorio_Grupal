@@ -5,7 +5,8 @@ import ec.edu.uce.ProyectoJuego.view.FrameGame;
 /**
  *
  * @author Cristian Lechon, Kevin Granda, Armando Valle
- * Titulo: Proyecto juego galaga
+ * Titulo: Proyecto juego galaga, cambiar la base de datos y la contraseña
+ * para poder usar la parte de DB.
  *
  */
 
