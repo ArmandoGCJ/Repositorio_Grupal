@@ -2,30 +2,32 @@ package ec.edu.uce.ProyectoJuego.model;
 
 import ec.edu.uce.ProyectoJuego.Interface.Drawable;
 import ec.edu.uce.ProyectoJuego.Interface.Movable;
-import jakarta.persistence.Column;
 
 import java.awt.*;
-
 
 public class Hero implements Drawable, Movable {
 
     private long id;
-    private int life = 0;
+    private int life = 100;
     private int score = 0;
     private int x = 400, y = 500;
     private String name;
     private String password;
+    private int currentLevelIndex = 0;
+    private int numEnemies = 0;
 
     public Hero() {
 
     }
 
-    public Hero(long id, String name, String password, int life, int score) {
+    public Hero(long id, int life, int score, String name, String password, int currentLevelIndex, int numEnemies) {
         this.id = id;
         this.life = life;
         this.score = score;
         this.name = name;
         this.password = password;
+        this.currentLevelIndex = currentLevelIndex;
+        this.numEnemies = numEnemies;
     }
 
     @Override
@@ -78,6 +80,22 @@ public class Hero implements Drawable, Movable {
         this.id = id;
     }
 
+    public int getCurrentLevelIndex() {
+        return currentLevelIndex;
+    }
+
+    public void setCurrentLevelIndex(int currentLevelIndex) {
+        this.currentLevelIndex = currentLevelIndex;
+    }
+
+    public int getNumEnemies() {
+        return numEnemies;
+    }
+
+    public void setNumEnemies(int numEnemies) {
+        this.numEnemies = numEnemies;
+    }
+
     public String getName() {
         return name;
     }
@@ -118,4 +136,14 @@ public class Hero implements Drawable, Movable {
         return y;
     }
 
+    @Override
+    public String toString() {
+        return "Hero{" +
+                "id=" + id +
+                ", life=" + life +
+                ", score=" + score +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

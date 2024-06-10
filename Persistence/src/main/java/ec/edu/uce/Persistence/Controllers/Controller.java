@@ -4,8 +4,6 @@ import ec.edu.uce.Persistence.Services.UserService;
 import ec.edu.uce.Persistence.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,9 +22,22 @@ public class Controller {
         userService.save(user);
     }
 
-    @GetMapping("/getuser")
-    public List<User> getUserByName(@RequestParam(name = "nombre") String name) {
-        return userService.findByName(name);
+    @PutMapping(value = "/updateUser")
+    public User updateUser(@RequestParam String name, @RequestParam String password, @RequestBody User updatedUser) {
+        User foundUser = userService.findByUserAndPassword(name, password);
+        if (foundUser == null) {
+            throw new RuntimeException("User no encontrado");
+        }
+        // Actualizar los campos restantes
+        foundUser.setId(updatedUser.getId());
+        foundUser.setLife(updatedUser.getLife());
+        foundUser.setScore(updatedUser.getScore());
+        foundUser.setCurrentLevelIndex(updatedUser.getCurrentLevelIndex());
+        foundUser.setNumEnemies(updatedUser.getNumEnemies());
+
+        userService.save(foundUser); // Guardar los cambios
+
+        return foundUser;
     }
 
     @PutMapping("/update")

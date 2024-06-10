@@ -6,24 +6,30 @@ import jakarta.persistence.*;
 @Table(name = "User")
 public class User {
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
     private String password;
     @Column
     private int life;
     @Column
     private int score;
+    @Column
+    private int currentLevelIndex;
+    @Column
+    private int numEnemies;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String name, String password, int life, int score) {
+    public User(String name, String password, int life, int score, int currentLevelIndex, int numEnemies) {
         this.name = name;
         this.password = password;
         this.life = life;
         this.score = score;
+        this.currentLevelIndex = currentLevelIndex;
+        this.numEnemies = numEnemies;
     }
 
     public long getId() {
@@ -66,14 +72,19 @@ public class User {
         this.score = score;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", life=" + life +
-                ", score=" + score +
-                '}';
+    public int getNumEnemies() {
+        return numEnemies;
+    }
+
+    public void setNumEnemies(int numEnemies) {
+        this.numEnemies = numEnemies;
+    }
+
+    public int getCurrentLevelIndex() {
+        return currentLevelIndex;
+    }
+
+    public void setCurrentLevelIndex(int currentLevelIndex) {
+        this.currentLevelIndex = currentLevelIndex;
     }
 }

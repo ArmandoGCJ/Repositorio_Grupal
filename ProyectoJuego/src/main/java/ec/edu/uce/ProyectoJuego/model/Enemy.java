@@ -126,10 +126,6 @@ public class Enemy implements Drawable, Movable, IHitBox {
         return life;
     }
 
-    public void setLife(int life) {
-        this.life = life;
-    }
-
     public List<Point> getPositions() {
         return positions;
     }

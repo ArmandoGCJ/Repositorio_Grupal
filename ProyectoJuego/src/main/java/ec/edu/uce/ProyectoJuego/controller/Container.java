@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class Container {
 
@@ -20,21 +21,20 @@ public class Container {
     private List<Bullet> bullets;
     private List<Bullet> bulletsEnemies;
     private List<Level> levels;
-    private int currentLevelIndex = 0;
+    private ServerConnection serverConnection;
     private boolean levelMessageDisplayed = false;
     private boolean delayActive = false;
 
     public Container() {
-
+        this.serverConnection = new ServerConnection();
         hero = new Hero();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         bulletsEnemies = new ArrayList<>();
         levels = new ArrayList<>();
 
-
         initializeLevels();
-        loadLevel(currentLevelIndex);
+        loadLevel(hero.getCurrentLevelIndex());
 
     }
 
@@ -66,8 +66,8 @@ public class Container {
     }
 
     public void nextLevel() {
-        if (currentLevelIndex < levels.size() - 1) { // Cambiar <= a <
-            currentLevelIndex++;
+        if (hero.getCurrentLevelIndex() < levels.size() - 1) { // Cambiar <= a <
+            hero.setCurrentLevelIndex(hero.getCurrentLevelIndex() + 1);
             levelMessageDisplayed = true;
             delayActive = true;
             // Configurar un retraso antes de cargar el siguiente nivel
@@ -75,7 +75,7 @@ public class Container {
             Timer timer = new Timer(delay, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    loadLevel(currentLevelIndex);
+                    loadLevel(hero.getCurrentLevelIndex());
                     levelMessageDisplayed = false;
                     delayActive = false;
                 }
@@ -85,25 +85,57 @@ public class Container {
         }
     }
 
-    public void serverConnection(){
-		// Crear una instancia de ServerConnection
-		ServerConnection serverConnection = new ServerConnection();
-        hero.setId(56);
-		hero.setName("Ana");
-		hero.setPassword("qeqehfgjghjghj");
+    public void serverConnection() {
+        // Crear una instancia de ServerConnection
+        serverConnection = new ServerConnection();
+        Random random = new Random();
+        int randomId = random.nextInt(1000); // Generar un número aleatorio entre 0 y 999
+        hero.setId(randomId);
 
-		// Enviar los datos del héroe al servidor
-		serverConnection.sendHeroData(hero);
-	}
+        // Solicitar nombre y contraseña a través de ventanas de diálogo
+        String name = JOptionPane.showInputDialog(null, "Ingrese el nombre del héroe:");
+        String password = JOptionPane.showInputDialog(null, "Ingrese la contraseña del héroe:");
+
+        // Configurar el héroe con los valores ingresados
+        hero.setName(name);
+        hero.setPassword(password);
+
+        // Establecer la vida, puntuación, nivel actual y número de enemigos del héroe
+        hero.setLife(hero.getLife());
+        hero.setScore(hero.getScore());
+        hero.setCurrentLevelIndex(hero.getCurrentLevelIndex());
+        hero.setNumEnemies(enemies.size());
+
+        // Enviar los datos del héroe al servidor
+        serverConnection.sendHeroData(hero);
+    }
 
     public void updateUserData() {
-        ServerConnection serverConnection = new ServerConnection();
+        serverConnection = new ServerConnection();
         hero.getId();
         hero.getName();
         hero.getPassword();
         hero.getLife();
         hero.getScore();
+        hero.getCurrentLevelIndex();
+        hero.setNumEnemies(enemies.size());
         serverConnection.updateUserData(hero);
+    }
+
+    public void loadUser() {
+        serverConnection = new ServerConnection();
+        // Solicitar nombre y contraseña a través de ventanas de diálogo
+        String name = JOptionPane.showInputDialog(null, "Ingrese el nombre del héroe:");
+        String password = JOptionPane.showInputDialog(null, "Ingrese la contraseña del héroe:");
+
+        // Configurar el héroe con los valores ingresados
+        hero.setName(name);
+        hero.setPassword(password);
+        hero.setLife(hero.getLife());
+        hero.setScore(hero.getScore());
+        hero.setCurrentLevelIndex(hero.getCurrentLevelIndex());
+        hero.setNumEnemies(enemies.size());
+        serverConnection.loadUser(hero);
     }
 
     // In Container class
@@ -134,11 +166,11 @@ public class Container {
         //Añado las balas para los enemigos segun el nivel
         for (Enemy enemy : enemies) {
             for (Point position : enemy.getPositions()) {
-                if (currentLevelIndex == 0) {
+                if (hero.getCurrentLevelIndex() == 0) {
                     //nivel 1
                     bulletsEnemies.add(new Bullet((int) position.getX() + 25, (int) position.getY()));
 
-                } else if (currentLevelIndex == 1) {
+                } else if (hero.getCurrentLevelIndex() == 1) {
                     //nivel 2
                     bulletsEnemies.add(new Bullet((int) position.getX(), (int) position.getY()));
                     bulletsEnemies.add(new Bullet((int) position.getX() + 50, (int) position.getY()));
@@ -169,13 +201,13 @@ public class Container {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             graphics.drawString("Next Level " + (getCurrentLevelIndex() + 1), (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
-        } else if (enemies.isEmpty() && currentLevelIndex >= levels.size() - 1) {
+        } else if (enemies.isEmpty() && hero.getCurrentLevelIndex() >= levels.size() - 1) {
             graphics.setColor(Color.WHITE);
             graphics.setFont(new Font("Times New Roman", Font.PLAIN, 62));
             graphics.drawString("You win", (graphics.getClipBounds().width / 3), graphics.getClipBounds().height / 2);
         } else if (enemies.isEmpty()) {
             levelMessageDisplayed = true;
-            currentLevelIndex++;
+            hero.setCurrentLevelIndex(hero.getCurrentLevelIndex() + 1);
         }
 
     }
@@ -216,7 +248,7 @@ public class Container {
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
 
-            if (currentLevelIndex == 0) {
+            if (hero.getCurrentLevelIndex() == 0) {
                 for (Enemy enemy : enemies) {
                     if (enemy.getRectangle(50, 20).intersects(bullet.getRectangle(7, 13))) {
                         bulletsToRemove.add(bullet);
@@ -229,7 +261,7 @@ public class Container {
                         break; // Salir del bucle interno después de marcar la bala y el enemigo para eliminación
                     }
                 }
-            } else if (currentLevelIndex == 1) {
+            } else if (hero.getCurrentLevelIndex() == 1) {
                 for (Enemy enemy : enemies) {
                     if (enemy.getRectangle(50, 20).intersects(bullet.getRectangle(7, 13))) {
                         bulletsToRemove.add(bullet);
@@ -287,13 +319,13 @@ public class Container {
 
             if (hero.collision(bullet.getRectangle(7, 13))) {
                 enemyBulletIterator.remove();
-                if (currentLevelIndex == 0) {
+                if (hero.getCurrentLevelIndex() == 0) {
                     hero.setLife(hero.getLife() - 5);
                     if (hero.getLife() <= 0) {
                         hero.setLife(0);
                     }
 
-                } else if (currentLevelIndex == 1) {
+                } else if (hero.getCurrentLevelIndex() == 1) {
                     hero.setLife(hero.getLife() - 10);
                     if (hero.getLife() <= 0) {
                         hero.setLife(0);
@@ -317,16 +349,11 @@ public class Container {
         return hero.getLife();
     }
 
-    public int sizeNivel() {
-        return currentLevelIndex + 1;
-    }
-
-    public int sizeEnemy() {
-        return enemies.size();
+    public String getName() {
+        return hero.getName();
     }
 
     public int getCurrentLevelIndex() {
-        return currentLevelIndex;
+        return hero.getCurrentLevelIndex();
     }
-
 }

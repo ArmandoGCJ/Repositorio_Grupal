@@ -24,10 +24,20 @@ public class GamePanel extends JPanel implements KeyListener {
     public GamePanel() {
         setBackground(Color.BLACK);
         setFocusable(true);
-        requestFocusInWindow(); // Ensure the panel gets focus
         addKeyListener(this);
         container = new Container();
-        container.serverConnection();
+
+        // Create a simple window with two buttons
+        int response = JOptionPane.showOptionDialog(null, "¿Has jugado el juego antes?", "Pregunta",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Sí", "No"}, "Sí");
+
+        if (response == JOptionPane.YES_OPTION) {
+            //Mando a cargar el juego
+            container.loadUser();
+        } else {
+            //mando a crear el usuario
+            container.serverConnection();
+        }
 
         // Game timer for refreshing the game
         gameTimer = new Timer(1000 / 60, new ActionListener() {
@@ -98,6 +108,15 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         g.drawString("Score: " + container.score(), 670, 20);
 
+        //Nombre del usuario
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        g.drawString(container.getName(), 0, 20);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        g.drawString("Level: " + (container.getCurrentLevelIndex() + 1), 350, 20);
+
         g.setColor(Color.WHITE);
         g.drawRect(1, 25, 103, 20);
         g.setColor(Color.GREEN);
@@ -131,6 +150,11 @@ public class GamePanel extends JPanel implements KeyListener {
             container.setBulletHero();
             repaint();
         }
+        if (e.getKeyCode() == KeyEvent.VK_L && !isPaused) {
+            container.loadUser();
+            repaint();
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             togglePause();
         }

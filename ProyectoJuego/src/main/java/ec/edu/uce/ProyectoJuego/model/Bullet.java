@@ -50,7 +50,7 @@ public class Bullet implements Drawable, Movable, IHitBox {
     }
 
     @Override
-    public Rectangle getRectangle(int width, int heigth){
+    public Rectangle getRectangle(int width, int heigth) {
         Rectangle bulletBounds = new Rectangle(x - 4, y, width, heigth);
         return bulletBounds;
     }

@@ -2,17 +2,19 @@ package ec.edu.uce.ProyectoJuego;
 
 import ec.edu.uce.ProyectoJuego.view.FrameGame;
 
-import java.awt.*;
-
+/**
+ *
+ * @author Cristian Lechon, Kevin Granda, Armando Valle
+ * Titulo: Proyecto juego galaga
+ *
+ */
 
 public class ProyectoJuegoApplication {
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrameGame().setVisible(true);
-            }
-        });
+
+        FrameGame frameGame = new FrameGame();
+        frameGame.setVisible(true);
 
     }
 }
